@@ -184,7 +184,7 @@ function App() {
 
     const handleTransfer = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/credit", {
+        const response = await fetch("https://limobile-backend-3.onrender.com/api/credit", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -298,7 +298,7 @@ function App() {
 
     const handleBuyForfait = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/forfait", {
+        const response = await fetch("https://limobile-backend-3.onrender.com/api/forfait", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
