@@ -6,7 +6,7 @@ import { Smartphone, ArrowRightLeft, Wifi, Phone, LogOut, Eye, EyeOff, Plus, His
 import logo from './assets/limobile_logo_2.png'
 import './App.css'
 
-const API_URL = 'https://5000-icfsshhm94fjdp0r26ufz-3ff9f654.us1.manus.computer/api'
+const API_URL = 'https://limobile-backend-3.onrender.com/api'
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState('login')
