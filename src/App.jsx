@@ -73,11 +73,19 @@ function App() {
     setError('')
     setSuccessMessage('')
 
-    if (!phoneNumber.trim() || pin.length !== 4 || confirmPin.length !== 4) {
-      setError('Veuillez remplir tous les champs correctement')
+    // Validation
+    if (!phoneNumber.trim()) {
+      setError('Veuillez entrer un numéro de téléphone')
       return
     }
-
+    if (pin.length !== 4) {
+      setError('Le PIN doit contenir 4 chiffres')
+      return
+    }
+    if (confirmPin.length !== 4) {
+      setError('La confirmation du PIN doit contenir 4 chiffres')
+      return
+    }
     if (pin !== confirmPin) {
       setError('Les codes PIN ne correspondent pas')
       return
@@ -85,16 +93,21 @@ function App() {
 
     setLoading(true)
     try {
+      const payload = {
+        phone_number: phoneNumber.trim(),
+        pin: pin
+      }
+      console.log('Registering with:', payload)
+      
       const response = await fetch(`${API_URL}/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          phone_number: phoneNumber,
-          pin: pin
-        })
+        body: JSON.stringify(payload)
       })
 
       const data = await response.json()
+      console.log('Register response:', data)
+      
       if (response.ok) {
         setSuccessMessage('Compte créé avec succès ! Connectez-vous maintenant.')
         setTimeout(() => {
@@ -107,7 +120,8 @@ function App() {
         setError(data.message || 'Erreur lors de la création du compte')
       }
     } catch (err) {
-      setError('Erreur de connexion au serveur')
+      console.error('Register error:', err)
+      setError('Erreur de connexion au serveur: ' + err.message)
     } finally {
       setLoading(false)
     }
