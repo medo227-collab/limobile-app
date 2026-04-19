@@ -6,7 +6,22 @@ import { Smartphone, ArrowRightLeft, Wifi, Phone, LogOut, Eye, EyeOff, Plus, His
 import logo from './assets/limobile_logo_2.png'
 import './App.css'
 
+// Capacitor imports
+import { App as CapacitorApp } from '@capacitor/app'
+import { SplashScreen } from '@capacitor/splash-screen'
+import { Device } from '@capacitor/device'
+
 const API_URL = 'https://limobile-backend-3.onrender.com/api'
+
+// Initialiser Capacitor
+const initCapacitor = async () => {
+  try {
+    // Masquer le splash screen après 2 secondes
+    await SplashScreen.hide()
+  } catch (err) {
+    console.log('Capacitor not available (running in browser)')
+  }
+}
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState('login')
@@ -23,6 +38,11 @@ function App() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
+
+  // Initialiser Capacitor au montage du composant
+  useEffect(() => {
+    initCapacitor()
+  }, [])
 
   const operators = [
     { id: 'airtel', name: 'Airtel', color: 'red', bgColor: 'bg-red-50' },
