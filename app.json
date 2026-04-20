@@ -1,0 +1,21 @@
+{
+  "expo": {
+    "name": "LiMobile",
+    "slug": "limobile-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "android": {
+      "package": "com.limobile.app",
+      "versionCode": 1
+    },
+    "extra": {
+      "eas": {
+        "projectId": "b559fdc8-182c-484d-bc02-649c2682a193"
+      }
+    }
+  }
+}

@@ -1,0 +1,6 @@
+(node:12728) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+The field "cli.appVersionSource" is not set, but it will be required in the future. Learn more: https://docs.expo.dev/build-reference/app-versions/
+Experience with id 'b559fdc8-182c-484d-bc02-649c2682a193' does not exist.
+Request ID: 64017cc6-7a98-4bac-8542-edb21bdab69f
+    Error: GraphQL request failed.
