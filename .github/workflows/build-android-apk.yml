@@ -1,0 +1,108 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '22'
+    
+    - name: Setup Java
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '21'
+    
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v2
+      with:
+        api-levels: '34'
+        build-tools: '34.0.0'
+    
+    - name: Install dependencies
+      run: |
+        npm install -g pnpm
+        pnpm install
+    
+    - name: Build React app
+      run: pnpm run build
+    
+    - name: Sync Capacitor
+      run: npx cap sync android
+    
+    - name: Build APK
+      run: |
+        cd android
+        chmod +x gradlew
+        ./gradlew assembleDebug
+    
+    - name: Upload APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: limobile-app-debug
+        path: android/app/build/outputs/apk/debug/app-debug.apk
+        retention-days: 30
+    
+    - name: Create Release
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ github.run_number }}
+        release_name: LiMobile v${{ github.run_number }}
+        body: |
+          ## LiMobile Android APK
+          
+          **Version:** v${{ github.run_number }}
+          **Build Date:** ${{ github.event.head_commit.timestamp }}
+          
+          ### Features:
+          - ✅ Multi-operator support (Airtel, Moov, Zamani)
+          - ✅ Airtime transfer
+          - ✅ Package purchase
+          - ✅ Transaction history
+          - ✅ Kkiapay integration
+          
+          ### Installation:
+          1. Download `app-debug.apk`
+          2. Transfer to your Android phone
+          3. Open the file and tap Install
+          
+          ### Test Credentials:
+          - Phone: +22790123456
+          - PIN: 1234
+          
+          ### Known Issues:
+          - Using mock APIs (integration with real APIs coming soon)
+          
+          ### Next Steps:
+          - Integrate real Airtel API
+          - Integrate real Moov API
+          - Integrate real Zamani API
+        draft: false
+        prerelease: false
+    
+    - name: Upload to Release
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: android/app/build/outputs/apk/debug/app-debug.apk
+        asset_name: LiMobile-v${{ github.run_number }}-debug.apk
+        asset_content_type: application/vnd.android.package-archive
